@@ -1,5 +1,6 @@
 from django.shortcuts import render, get_object_or_404
 from django.http import HttpResponse
+from django.core.exceptions import ValidationError
 from .models import CustomUser
 from .serializers import UserSerializer
 from rest_framework.views import APIView
@@ -12,9 +13,15 @@ from django.utils import timezone
 class RegisterView(APIView):
     def post(self, request):
         serializer = UserSerializer(data=request.data)
-        serializer.is_valid(raise_exception=True)
+
+        if not serializer.is_valid():
+            raise ValidationError('Invalid Data!')
         serializer.save()
-        return Response(serializer.data)
+
+        return Response({
+            "message": "User registered successfully!"
+        })
+        # return Response(serializer.data)
     
 class LoginView(APIView):
     def post(self, request):
