@@ -1,0 +1,7 @@
+<form method="post"> {% csrf_token %}
+    <!-- <input type="text" name="username" placeholder="Your Username"/><br> -->
+    <input type="email" name="email" placeholder="Your Email"/><br>
+    <input type="password" name="password" placeholder="Your Password"/>
+    {{ form.as_p }}
+    <input type="submit" value="Save"/>
+</form>
