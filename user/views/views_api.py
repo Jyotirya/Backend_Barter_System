@@ -1,16 +1,22 @@
-from django.shortcuts import render, get_object_or_404
-from django.http import HttpResponse
 from django.core.exceptions import ValidationError
-from .models import CustomUser
-from .serializers import UserSerializer
+from ..models import CustomUser
+from ..serializers import UserSerializer
 from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework.exceptions import AuthenticationFailed
+from rest_framework.permissions import AllowAny
 import jwt, datetime
 from django.utils import timezone
+from django.views.decorators.csrf import csrf_exempt
+from django.utils.decorators import method_decorator
 
 # Create your views here.
-class RegisterView(APIView):
+
+@method_decorator(csrf_exempt, name='dispatch')
+class RegisterAPIView(APIView):
+    template_name = 'user_temp/register.html'
+    permission_classes = [AllowAny]
+    
     def post(self, request):
         serializer = UserSerializer(data=request.data)
 
@@ -21,9 +27,8 @@ class RegisterView(APIView):
         return Response({
             "message": "User registered successfully!"
         })
-        # return Response(serializer.data)
     
-class LoginView(APIView):
+class LoginAPIView(APIView):
     def post(self, request):
         email = request.data['email']
         password = request.data['password']
@@ -47,12 +52,13 @@ class LoginView(APIView):
         response = Response()
         response.set_cookie(key='jwt', value=token, httponly=True)
         response.data = {
-            'jwt': token
+            'message': 'Success',
+            'jwt': token,
         }
 
         return response
     
-class UserView(APIView):
+class UserAPIView(APIView):
     def get(self, request):
         token = request.COOKIES.get('jwt')
         
@@ -69,7 +75,7 @@ class UserView(APIView):
 
         return Response(serializer.data)
     
-class LogoutView(APIView):
+class LogoutAPIView(APIView):
     def post(self, request):
         response = Response()
         response.delete_cookie('jwt')

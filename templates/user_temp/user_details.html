@@ -1,0 +1,50 @@
+<html>
+    <head>
+        <title>
+            User Details
+        </title>
+    </head>
+
+    <body>
+        <h1>User Details</h1>
+        <pre id="id"></pre>
+        <pre id="email"></pre>
+        <pre id="firstname"></pre>
+        <pre id="lastname"></pre>
+        <pre id="address1"></pre>
+        <pre id="address2"></pre>
+        <script>
+            window.onload = async () => {
+                const response = await fetch("/api/auth/me/", {
+                    method: "GET",
+                    credentials: "include"  // 🔴 VERY IMPORTANT
+                });
+
+                // console.log(response);
+                
+                const data = await response.json();
+                console.log(data);
+
+                email = data.email;
+                id = data.id;
+                firstname = data.first_name
+                lastname = data.last_name
+                address1 = data.address1
+                address2 = data.address2
+
+
+                if(email != ''){
+                    document.getElementById('id').innerText = id;
+                    document.getElementById('email').innerText = email;
+                    document.getElementById('firstname').innerText = firstname;
+                    document.getElementById('lastname').innerText = lastname;
+                    document.getElementById('address1').innerText = address1;
+                    document.getElementById('address2').innerText = address2;
+                }else{
+                    alert('This user does not exist!')
+                }
+
+            }
+        </script>
+    </body>
+</html>

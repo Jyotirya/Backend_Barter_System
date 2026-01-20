@@ -7,10 +7,14 @@ from .validators import domain_validator
 class CustomUserChangeForm(UserChangeForm):
     class Meta:
         model = CustomUser
-        fields = (
+        fields = [
             "email",
-            'password',
-        )
+            "first_name",
+            "last_name",
+            "address1",
+            "address2",
+            "is_active",
+            "is_staff"]
 
 class CreateUserForm(UserCreationForm):
     class Meta:
@@ -18,4 +22,8 @@ class CreateUserForm(UserCreationForm):
         fields = (
             'email',
             'password',
+            'first_name',
+            'last_name',
+            "address1",
+            "address2"
         )
