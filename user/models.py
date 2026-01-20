@@ -1,5 +1,4 @@
 from django.db import models
-from django.urls import reverse
 from .validators import domain_validator
 from django.contrib.auth.models import AbstractUser
 from .managers import CustomUserManager
