@@ -15,7 +15,7 @@
         <pre id="address2"></pre>
         <script>
             window.onload = async () => {
-                const response = await fetch("/api/auth/me/", {
+                const response = await fetch("/api/auth/user/me/", {
                     method: "GET",
                     credentials: "include"  // 🔴 VERY IMPORTANT
                 });

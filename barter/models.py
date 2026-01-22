@@ -27,8 +27,6 @@ class Item(models.Model):
     # image = models.ImageField(blank=True)
     # tags = models.JSONField(blank=True)
 
-    status = models.CharField(max_length=30)
-
     def save(self, *args, **kwargs):
         if not self.itemId:
             while True:
@@ -43,13 +41,23 @@ class Item(models.Model):
         return timezone.now() > self.deadline
 
     def barter_status(self):
+        # Expiry check
         if self.is_expired():
-            return "expired"
+            return 'expired'
         
-        return 'active'
+        try:
+            barter_log = self.barterlog_set
+        except BarterLog.DoesNotExist:
+            return "available"
+        
+        if barter_log.is_requested():
+            return 'requested'
+
+        if barter_log.is_accepted():
+            return 'accepted'
 
 
-class BarterLogs(models.Model):
+class BarterLog(models.Model):
     buyer = models.ForeignKey(
         CustomUser,
         on_delete=models.CASCADE,
@@ -57,9 +65,10 @@ class BarterLogs(models.Model):
         blank=True,
     )
 
-    item = models.ForeignKey(
+    item = models.OneToOneField(
         Item,
-        on_delete=models.CASCADE
+        on_delete=models.CASCADE,
+        related_name='barterlog_set'
     )
 
     buyer_request_time = models.DateTimeField(blank=True, null=True)

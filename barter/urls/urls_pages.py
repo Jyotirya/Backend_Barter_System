@@ -1,7 +1,7 @@
 from django.urls import path, include
-from ..views.views_pages import barterView
+from ..views.views_pages import ItemListPageView
 
 app_name = 'barter_pages'
 urlpatterns = [
-    path('', barterView, name='barter')
+    path('', ItemListPageView, name='barter')
 ]

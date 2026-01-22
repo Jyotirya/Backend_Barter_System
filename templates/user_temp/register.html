@@ -22,7 +22,7 @@
         const address1 = document.getElementById('address1').value;
         const address2 = document.getElementById('address2').value;
         
-        const response = await fetch('/api/auth/signup/', {
+        const response = await fetch('/api/auth/user/signup/', {
             method: 'POST',
             headers: { "Content-Type": "application/json" },
             body: JSON.stringify({

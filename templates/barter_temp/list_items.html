@@ -1,0 +1,23 @@
+<h1>List Items here</h1>
+
+<script>
+    window.onload = async () => {
+        const response = await fetch('/api/auth/barter/items/', {
+            method: 'GET',
+            credentials:"include",
+        });
+
+        
+        const data = await response.json()
+        console.log(data);
+
+        // data.item_list.forEach(async (element) => {
+        //     const module_response = await fetch('/api/auth/barter/module/', {
+        //         method: 'GET',
+        //         credentials: "include"
+        //     });
+
+        //     const module_data = await module_response.json()
+        // });
+    }
+</script>

@@ -8,7 +8,7 @@
         <button id="logout">Logout</button>
         <script>
             document.getElementById('logout').addEventListener('click', async () => {
-                const response = await fetch('/api/auth/logout/', {
+                const response = await fetch('/api/auth/user/logout/', {
                     method: 'POST',
                     credentials: 'include'
                 })
