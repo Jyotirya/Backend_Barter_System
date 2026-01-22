@@ -9,13 +9,13 @@ import jwt, datetime
 from django.utils import timezone
 from django.views.decorators.csrf import csrf_exempt
 from django.utils.decorators import method_decorator
+from django.conf import settings
 
 # Create your views here.
 
-@method_decorator(csrf_exempt, name='dispatch')
+@method_decorator(csrf_exempt, name='dispatch') # ChatGPT used for this line
 class RegisterAPIView(APIView):
-    template_name = 'user_temp/register.html'
-    permission_classes = [AllowAny]
+    permission_classes = [AllowAny] # ChatGPT also used for this line
     
     def post(self, request):
         serializer = UserSerializer(data=request.data)
@@ -47,7 +47,7 @@ class LoginAPIView(APIView):
             'iat': timezone.now(),
         }
 
-        token = jwt.encode(payload, 'secret', algorithm='HS256')
+        token = jwt.encode(payload, settings.SECRET_KEY, algorithm='HS256')
 
         response = Response()
         response.set_cookie(key='jwt', value=token, httponly=True)
@@ -66,7 +66,7 @@ class UserAPIView(APIView):
             raise AuthenticationFailed('Unauthenticated!')
 
         try:
-            payload = jwt.decode(token, 'secret', algorithms=['HS256'])
+            payload = jwt.decode(token, settings.SECRET_KEY, algorithms=['HS256'])
         except jwt.ExpiredSignatureError:
             raise AuthenticationFailed('Unauthenticated!')
 
