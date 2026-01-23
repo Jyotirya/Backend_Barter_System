@@ -1,5 +1,5 @@
 from django.contrib import admin
-from .models import Item, BarterLog
+from .models import Item, BarterLog, Wishlist
 
 # Register your models here.
 class BarterItemAdmin(admin.ModelAdmin):
@@ -10,8 +10,8 @@ class BarterItemAdmin(admin.ModelAdmin):
         "deadline",
         "timeCreated",
     )
-    # list_filter = ("is_active",)
     search_fields = ("name", "itemId", "seller")
 
 admin.site.register(Item, BarterItemAdmin)
 admin.site.register(BarterLog)
+admin.site.register(Wishlist)

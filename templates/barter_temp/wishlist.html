@@ -1,0 +1,17 @@
+<h1> Wishlist </h1>
+
+<body>
+    <button id="add"> Add </button>
+
+    <script>
+        document.getElementById('accept').addEventListener('click', async (e) => {
+            const response = await fetch('/api/auth/barter/accept/!3X!@9RV/', {
+                method: 'POST',
+                credentials:"include"
+            })
+
+            const data = await response.json()
+            console.log(data);
+        })
+    </script>
+</body>

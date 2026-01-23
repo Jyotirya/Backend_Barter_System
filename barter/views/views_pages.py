@@ -8,3 +8,9 @@ def SearchItemPageView(request):
 
 def CreateItemPageView(request):
     return render(request, 'barter_temp/create.html', {})
+
+def AcceptItemPageView(request):
+    return render(request, 'barter_temp/accept.html', {})
+
+def AddToWishListPageView(request):
+    return render(request, 'barter_temp/wishlist.html', {})

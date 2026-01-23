@@ -24,9 +24,6 @@ class Item(models.Model):
 
     deadline = models.DateTimeField()
 
-    # image = models.ImageField(blank=True)
-    # tags = models.JSONField(blank=True)
-
     def save(self, *args, **kwargs):
         if not self.itemId:
             while True:
@@ -97,3 +94,12 @@ class BarterLog(models.Model):
         self.seller = seller
         self.seller_accepted_time = timezone.now()
         self.save(update_fields=["seller", "seller_accepted_time"])
+
+class Wishlist(models.Model):
+    user = models.OneToOneField(
+        CustomUser,
+        on_delete=models.CASCADE,
+        related_name="user_set"
+    )
+
+    item_list = models.JSONField()

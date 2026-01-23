@@ -10,6 +10,7 @@ from django.utils import timezone
 from django.views.decorators.csrf import csrf_exempt
 from django.utils.decorators import method_decorator
 from django.conf import settings
+from barter.models import Wishlist
 
 # Create your views here.
 
@@ -22,7 +23,13 @@ class RegisterAPIView(APIView):
 
         if not serializer.is_valid():
             raise ValidationError('Invalid Data!')
-        serializer.save()
+        
+        created_user = serializer.save()
+
+        Wishlist.objects.create(
+            user = created_user,
+            item_list = {}
+        )
 
         return Response({
             "message": "User registered successfully!"
