@@ -49,7 +49,6 @@ class SearchItemAPIView(APIView):
         })
     
 class CreateItemAPIView(APIView):
-
     authentication_classes = [CookieJWTAuthentication]
     permission_classes = [IsAuthenticated]
 
@@ -69,6 +68,40 @@ class CreateItemAPIView(APIView):
             {"message": "Item created successfully"},
             status=201
         )
+    
+# class UpdateItemAPIView(APIView):
+#     authentication_classes = [CookieJWTAuthentication]
+#     permission_classes = [IsAuthenticated]
+
+#     def post(self, request, *args, **kwargs):
+#         item = Item.objects.filter(itemId = self.kwargs['itemId'])
+
+#         serializer = ItemSerializer(data = request.data)
+
+#         if not serializer.is_valid():
+#             return Response(serializer.errors, status=400)
+            
+#         created_item = serializer.save(seller=request.user)
+    
+class DeleteItemAPIView(APIView):
+    authentication_classes = [CookieJWTAuthentication]
+    permission_classes = [IsAuthenticated]
+
+    def post(self, request, *args, **kwargs):
+        item = Item.objects.filter(
+            itemId = self.kwargs['itemId']
+        )
+
+        item.delete()
+
+        if Item.objects.filter(itemId = self.kwargs['itemId']).exists():
+            return Response({
+                "message": "Error in deleting item"
+            })
+        
+        return Response({
+            "message": "Item deleted successfully"
+        })
     
 class RequestItemAPIView(APIView):
 

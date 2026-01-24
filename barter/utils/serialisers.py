@@ -14,6 +14,8 @@ class ItemSerializer(serializers.ModelSerializer):
             "description",
             "deadline",
             "status",
+            "condition",
+            "tags",
         ]
 
     def get_status(self, obj):

@@ -5,6 +5,11 @@ from .utils.random_id import generate_id
 
 # Create your models here.
 class Item(models.Model):
+
+    class Condition(models.TextChoices):
+        NEW = 'New', 'NEW'
+        USED = 'Used', 'USED'
+
     itemId = models.CharField(
         max_length=10,
         unique=True,
@@ -23,6 +28,14 @@ class Item(models.Model):
     timeCreated = models.DateTimeField(auto_now_add=True)
 
     deadline = models.DateTimeField()
+
+    condition = models.CharField(
+        max_length=20,
+        choices=Condition.choices,
+        default=Condition.USED
+    )
+
+    tags = models.CharField(max_length=255, blank=True, null=True)
 
     def save(self, *args, **kwargs):
         if not self.itemId:
@@ -99,7 +112,18 @@ class Wishlist(models.Model):
     user = models.OneToOneField(
         CustomUser,
         on_delete=models.CASCADE,
-        related_name="user_set"
+        related_name="userwishlist_set"
     )
 
     item_list = models.JSONField()
+
+class ItemImage(models.Model):
+    image_url = models.URLField(max_length=255)
+    item = models.ForeignKey(
+        Item,
+        # CustomUser,
+        on_delete=models.CASCADE,
+        related_name="image_set",
+        blank=True,
+        null=True 
+    )

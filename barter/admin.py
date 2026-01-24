@@ -1,5 +1,5 @@
 from django.contrib import admin
-from .models import Item, BarterLog, Wishlist
+from .models import Item, BarterLog, Wishlist, ItemImage
 
 # Register your models here.
 class BarterItemAdmin(admin.ModelAdmin):
@@ -15,3 +15,4 @@ class BarterItemAdmin(admin.ModelAdmin):
 admin.site.register(Item, BarterItemAdmin)
 admin.site.register(BarterLog)
 admin.site.register(Wishlist)
+admin.site.register(ItemImage)

@@ -3,7 +3,6 @@ from .validators import domain_validator
 from django.contrib.auth.models import AbstractUser
 from .managers import CustomUserManager
 
-
 # Create your models here.
 class CustomUser(AbstractUser):
     # add additional fields in here
@@ -16,8 +15,17 @@ class CustomUser(AbstractUser):
     address1 = models.CharField(max_length=50, blank=True)
     address2 = models.CharField(max_length=50, blank=True)
 
-
     USERNAME_FIELD = 'email'
     REQUIRED_FIELDS = []
 
     objects = CustomUserManager()
+
+class UserImage(models.Model):
+    image_url = models.URLField(max_length=255)
+    user = models.OneToOneField(
+        CustomUser,
+        on_delete=models.CASCADE,
+        related_name="user_set",
+        blank=True,
+        null=True 
+    )

@@ -1,5 +1,5 @@
 from django.urls import path, include
-from ..views.views_pages import ItemListPageView, SearchItemPageView, CreateItemPageView, AcceptItemPageView
+from ..views.views_pages import ItemListPageView, SearchItemPageView, CreateItemPageView, AcceptItemPageView, AddToWishListPageView
 
 app_name = 'barter_pages'
 urlpatterns = [
@@ -7,4 +7,5 @@ urlpatterns = [
     path('search/', SearchItemPageView, name='search'),
     path('create/', CreateItemPageView, name='create'),
     path('accept/', AcceptItemPageView, name='accept'),
+    path('add/', AddToWishListPageView, name='add-wishlist'),
 ]
