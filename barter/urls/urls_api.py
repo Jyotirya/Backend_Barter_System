@@ -8,6 +8,7 @@ from ..views.views_api import (
     AcceptItemAPIView,
     DisplayRequestedItemAPIView,
     AddToWishListAPIView,
+    GetRequestedItemsAPIView
     )
 
 
@@ -18,7 +19,8 @@ urlpatterns = [
     path('create/', CreateItemAPIView.as_view()),
     path('delete/<str:itemId>/', DeleteItemAPIView.as_view()),
     path('request/<str:itemId>/', RequestItemAPIView.as_view()),
-    path('accept/<str:itemId>/', AcceptItemAPIView.as_view()),
+    path('requests/', GetRequestedItemsAPIView.as_view()),
+    path('requests/<dec>/<str:itemId>/', AcceptItemAPIView.as_view()),
     path('pending-requests/', DisplayRequestedItemAPIView.as_view()),
     path('add/<str:itemId>/', AddToWishListAPIView.as_view()),
 ]
