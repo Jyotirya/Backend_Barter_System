@@ -115,10 +115,10 @@ class Wishlist(models.Model):
         related_name="userwishlist_set"
     )
 
-    item_list = models.JSONField()
+    item_list = models.JSONField(blank=True, null=True, default={})
 
 class ItemImage(models.Model):
-    image_url = models.URLField(max_length=255)
+    image_url = models.URLField()
     item = models.ForeignKey(
         Item,
         # CustomUser,

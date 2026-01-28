@@ -1,7 +1,7 @@
 from django.contrib import admin
 from django.contrib.auth.admin import UserAdmin
 from .forms import CustomUserChangeForm, CreateUserForm
-from .models import CustomUser, UserImage
+from .models import CustomUser
 
 class CustomUserAdmin(UserAdmin):
     add_form = CreateUserForm
@@ -23,6 +23,7 @@ class CustomUserAdmin(UserAdmin):
                 "last_name",
                 "address1",
                 "address2",
+                "img"
             ]}
         ),
         (
@@ -58,4 +59,3 @@ class CustomUserAdmin(UserAdmin):
 
 # Register your models here.
 admin.site.register(CustomUser, CustomUserAdmin) # For user creation
-admin.site.register(UserImage)
