@@ -57,7 +57,8 @@ class LoginAPIView(APIView):
         token = jwt.encode(payload, settings.SECRET_KEY, algorithm='HS256')
 
         response = Response()
-        response.set_cookie(key='jwt', value=token, httponly=True)
+        response.set_cookie(key='jwt', value=token, httponly=True,)
+                            # samesite='None',secure=False,)
         response.data = {
             'message': 'Success',
             'jwt': token,
@@ -68,9 +69,13 @@ class LoginAPIView(APIView):
 class UserAPIView(APIView):
     def get(self, request):
         token = request.COOKIES.get('jwt')
-        
+
         if not token:
-            raise AuthenticationFailed('Unauthenticated!')
+            # raise AuthenticationFailed('no cookie!')
+            return Response({
+                "message": 'no cookie',
+                "token": token
+            })
 
         try:
             payload = jwt.decode(token, settings.SECRET_KEY, algorithms=['HS256'])

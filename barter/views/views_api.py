@@ -117,9 +117,27 @@ class RequestItemAPIView(APIView):
         return Response({
             "message": 'Requested'
         })
-    
-class AcceptItemAPIView(APIView):
 
+class GetRequestedItemsAPIView(APIView):
+    authentication_classes = [CookieJWTAuthentication]
+    permission_classes = [IsAuthenticated]
+
+    def get(self, request, *args, **kwargs):
+        query_set = BarterLog.objects.filter(
+            buyer_request_time__isnull = False
+        )
+        
+        item_list = {}
+
+        for instance in query_set:
+            if instance.item.seller == request.user and instance.seller_accepted_time == None:
+                serializer = ItemSerializer(instance.item)
+                item_list[instance.item.itemId] = serializer.data
+
+        return Response(item_list)
+
+
+class AcceptItemAPIView(APIView):
     authentication_classes = [CookieJWTAuthentication]
     permission_classes = [IsAuthenticated]
 
@@ -128,12 +146,18 @@ class AcceptItemAPIView(APIView):
             item = Item.objects.filter(itemId=self.kwargs['itemId']).first(),
             buyer_request_time__isnull = False
         )
-        
-        barter.update(seller_accepted_time = timezone.now())
 
+        if self.kwargs['dec'] == 'accept': 
+            barter.update(seller_accepted_time = timezone.now())
+            message = 'Accepted Item'
+        elif self.kwargs['dec'] == 'decline':
+            barter.update(buyer_request_time = None)
+            message = 'Declined Item'
+        else:
+            message = 'Failed to accept/decline, please try again!'
 
         return Response({
-            "message": "Accepted Item"
+            "message": message
         })
     
 class DisplayRequestedItemAPIView(APIView):
@@ -149,8 +173,9 @@ class DisplayRequestedItemAPIView(APIView):
         item_list = {}
 
         for instance in query_set:
-            serialiser = ItemSerializer(instance.item)
-            item_list[instance.item.itemId] = serialiser.data
+            if instance.buyer == request.user:
+                serialiser = ItemSerializer(instance.item)
+                item_list[instance.item.itemId] = serialiser.data
 
         return Response(item_list)
     
