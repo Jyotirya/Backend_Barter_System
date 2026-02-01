@@ -6,7 +6,7 @@ from django.db.models import Q
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.views import APIView
 from rest_framework.response import Response
-from user.models import CustomUser
+from user.serializers import UserSerializer
 from ..utils.serialisers import ItemSerializer
 from ..utils.authenticators import CookieJWTAuthentication
 from django.utils import timezone
@@ -68,21 +68,7 @@ class CreateItemAPIView(APIView):
             {"message": "Item created successfully"},
             status=201
         )
-    
-# class UpdateItemAPIView(APIView):
-#     authentication_classes = [CookieJWTAuthentication]
-#     permission_classes = [IsAuthenticated]
 
-#     def post(self, request, *args, **kwargs):
-#         item = Item.objects.filter(itemId = self.kwargs['itemId'])
-
-#         serializer = ItemSerializer(data = request.data)
-
-#         if not serializer.is_valid():
-#             return Response(serializer.errors, status=400)
-            
-#         created_item = serializer.save(seller=request.user)
-    
 class DeleteItemAPIView(APIView):
     authentication_classes = [CookieJWTAuthentication]
     permission_classes = [IsAuthenticated]
@@ -136,6 +122,20 @@ class GetRequestedItemsAPIView(APIView):
 
         return Response(item_list)
 
+class GetBuyerAPIView(APIView):
+    def post(self, request, *args, **kwargs):
+
+        barter_log = BarterLog.objects.get(item = Item.objects.get(itemId = self.kwargs['itemId']))
+        buyer = UserSerializer(barter_log.buyer)
+        
+        return Response(buyer.data)
+
+        # item = Item.objects.get(itemId = self.kwargs['itemId'])
+        
+        # seller = UserSerializer(item.seller)
+
+        # return Response(seller.data)
+    
 
 class AcceptItemAPIView(APIView):
     authentication_classes = [CookieJWTAuthentication]
@@ -151,7 +151,7 @@ class AcceptItemAPIView(APIView):
             barter.update(seller_accepted_time = timezone.now())
             message = 'Accepted Item'
         elif self.kwargs['dec'] == 'decline':
-            barter.update(buyer_request_time = None)
+            barter.update(buyer_request_time = None, buyer = '')
             message = 'Declined Item'
         else:
             message = 'Failed to accept/decline, please try again!'
@@ -184,24 +184,33 @@ class AddToWishListAPIView(APIView):
     permission_classes = [IsAuthenticated]
 
     def post(self, request, *args, **kwargs):
-        added_item = Item.objects.filter(itemId=self.kwargs['itemId'])
+        added_item = Item.objects.get(itemId=self.kwargs['itemId'])
 
+        print(added_item)
+        
+        # for instance in added_item:
         serialiser = ItemSerializer(added_item)
+
 
         data = serialiser.data
 
-        wishlist = Wishlist.objects.filter(
-            user = request.user
-        )
-
+        wishlist = Wishlist.objects.get(user=request.user)
         item_list = wishlist.item_list
 
-        item_list[added_item.itemId] = data
+        item_list[self.kwargs['itemId']] = data
 
-        wishlist.update(
-            item_list = item_list
-        )
+        wishlist.item_list = item_list
+        wishlist.save()
 
         return Response({
             "message": "Added to Wishlist"
         })
+    
+class getWishlistAPIView(APIView):
+    authentication_classes = [CookieJWTAuthentication]
+    permission_classes = [IsAuthenticated]
+
+    def get(self, request):
+        query_set = Wishlist.objects.get(user = request.user)
+
+        return Response(query_set.item_list)

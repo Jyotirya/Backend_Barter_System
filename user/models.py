@@ -19,13 +19,4 @@ class CustomUser(AbstractUser):
     REQUIRED_FIELDS = []
 
     objects = CustomUserManager()
-
-class UserImage(models.Model):
-    image_url = models.URLField(max_length=255)
-    user = models.OneToOneField(
-        CustomUser,
-        on_delete=models.CASCADE,
-        related_name="user_set",
-        blank=True,
-        null=True 
-    )
+    img = models.URLField(max_length=255, blank=True, null=True)
